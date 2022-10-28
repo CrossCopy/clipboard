@@ -17,7 +17,7 @@ class ClipboardEventListener extends EventEmitter {
     if (path.basename(__dirname) === "dist") {
       pathArr.push("..");
     }
-    const exeFilename = `go-clipboard-monitor-${platform}-${arch}s`;
+    const exeFilename = `go-clipboard-monitor-${platform}-${arch}`;
     pathArr.push(...["go-clipboard-monitor", exeFilename]);
     const exePath = path.join(...pathArr);
     if (!fs.existsSync(exePath)) {
