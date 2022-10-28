@@ -1,10 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { EventEmitter } from 'events';
-import { spawn, ChildProcessWithoutNullStreams } from 'node:child_process';
+import { spawn, execFile, ChildProcessWithoutNullStreams, ChildProcess } from 'node:child_process';
 
 class ClipboardEventListener extends EventEmitter {
-  child: ChildProcessWithoutNullStreams | undefined;
+  child: ChildProcess | undefined;
   constructor() {
     super();
     this.child = undefined;
@@ -28,7 +28,7 @@ class ClipboardEventListener extends EventEmitter {
         `Executable (${exeFilename}) not found, your platform is ${platform} ${arch} and may not be supported.`
       );
     }
-    this.child = spawn(exePath);
+    this.child = execFile(exePath);
     this.child.stdout?.on('data', (data: Buffer) => {
       const dataStr = data.toString();
       if (dataStr.trim() === 'TEXT_CHANGED') {
