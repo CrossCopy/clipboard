@@ -1,8 +1,16 @@
 # General Clipboard Listener
 
+> A Cross-Platform clipboard listener that listens for both text and image.
+
 npm package: https://www.npmjs.com/package/general-clipboard-listener
 
-A Cross-Platform clipboard listener that listens for both text and image.
+## Installation
+
+`npm i general-clipboard-listener`
+
+## Usage
+
+It has a very easy to use event-based system.
 
 See [demo.ts](./demo.ts) for a demo.
 
