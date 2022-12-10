@@ -1,6 +1,6 @@
 {
   "name": "general-clipboard-listener",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Cross Platform Clipboard listener that detects both text and image update in clipboard",
   "source": "index.ts",
   "types": "./dist/index.d.ts",
