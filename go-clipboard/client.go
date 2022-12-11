@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"os"
 	"sync"
 
 	"golang.design/x/clipboard"
@@ -13,8 +14,14 @@ import (
 
 func main() {
 	err := clipboard.Init()
-	con, err := net.Dial("tcp", "localhost:8090")
+	var port = "8090"
+	if len(os.Args) == 2 {
+		port = os.Args[1]
+	}
+	address := fmt.Sprintf("localhost:%s", port)
+	fmt.Printf("Client Started, Connecting to %s", address)
 
+	con, err := net.Dial("tcp", address)
 	checkErr(err)
 	var wg sync.WaitGroup
 
@@ -43,10 +50,14 @@ func main() {
 	wg.Add(1)
 	go func() {
 		for data := range imgCh {
+			imgCon, err := net.Dial("tcp", address)
+			checkErr(err)
 			fmt.Println("IMAGE_CHANGED") // write TEXT_CHANGED to stdout for parent process to detect clipboard text update
 			base64Img := base64.StdEncoding.EncodeToString(data)
 			payload := "IMAGE_CHANGED:" + base64Img
-			con.Write([]byte(payload))
+			log.Println(len(payload))
+			imgCon.Write([]byte(payload))
+			imgCon.Close()
 		}
 	}()
 
@@ -59,7 +70,6 @@ func main() {
 		}
 	}()
 	wg.Wait()
-
 }
 
 func checkErr(err error) {
