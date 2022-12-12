@@ -1,22 +1,26 @@
-var net = require("net");
+const net = require("net");
 const fs = require("fs");
 const path = require("path");
 const { execFile } = require("node:child_process");
 
-const server = net.createServer(function (connection) {
-  console.log("client connected");
-
+const server = net.createServer(function (con) {
+  // client connected
   let data = "";
 
-  connection.on("end", function () {
-    console.log("client disconnected");
-  });
+  // * demo of sending message to client,
+  // con.write("close");
 
-  connection.on("data", (packet) => {
+  /**
+   * Accumulate data by concatenating chunks of received data
+   */
+  con.on("data", (packet) => {
     data += packet.toString();
   });
-  
-  connection.on("close", () => {
+
+  /**
+   * When socket connection closes, wrap up received data
+   */
+  con.on("close", () => {
     const strData = data.toString();
     const subStr = strData.substring(0, 14);
     if (subStr.includes("TEXT_CHANGED:")) {
@@ -39,6 +43,6 @@ server.listen(8090, function () {
   const execPath = path.join(__dirname, "client");
   const child = execFile(execPath, [server.address().port]);
   child.stdout.on("data", (data) => {
-    console.log("stdout " + data);
+    console.log("Received data from client socket stdout:\n" + data);
   });
 });
