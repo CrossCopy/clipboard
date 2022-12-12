@@ -13,6 +13,7 @@ import {
 import util from "util";
 
 const execFileAsync = util.promisify(execFile);
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 const base64StringToUTF8 = (base64Str: string) => {
   const base64buf = Buffer.from(base64Str, "base64"); // parse base64 string to buffer
