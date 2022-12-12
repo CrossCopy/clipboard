@@ -1,4 +1,4 @@
-module github.com/CrossCopy/general-clipboard-listener/go-clipboard-monitor
+module github.com/CrossCopy/clipboard/go-clipboard
 
 go 1.19
 

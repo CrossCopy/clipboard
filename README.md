@@ -6,7 +6,7 @@ npm package: https://www.npmjs.com/package/general-clipboard-listener
 
 ## Installation
 
-`npm i general-clipboard-listener`
+`npm i @crosscopy/clipboard`
 
 ## Usage
 
@@ -17,26 +17,58 @@ See [demo.ts](./demo.ts) for a demo.
 Run `ts-node demo.ts`.
 
 ```ts
-import clipboardEventListener from "./index";
+import clipboardEventListener from "./@crosscopy/clipboard";
 
-clipboardEventListener.on("text", () => {
-  console.log("Clipboard Text Updated");
-});
+console.log(clipboard.readTextSync());
+  console.log(await clipboard.readText());
+  const imgBuf = clipboard.readImageSync();
+  // console.log(imgBuf.toString("base64"));
+  // console.log(clipboard.readImageBase64Sync());
+  // await clipboard.writeImage(base64img); // add fake image to clipboard
+  clipboard.writeImageSync(base64img); // add fake image to clipboard
+  console.log(""); // give some time
+  console.assert(clipboard.readImageBase64Sync() === base64img);
 
-clipboardEventListener.on("image", () => {
-  console.log("Clipboard Image Updated");
-});
+  // * test readimage
+  clipboard.writeImageSync(base64img);
+  console.log();
+  console.assert(
+    (await clipboard.readImage()).toString("base64") === base64img
+  );
 
-clipboardEventListener.on("open", (data) => {
-  console.log(data);
-});
-
-clipboardEventListener.startListening();
-
-setTimeout(() => {
-  clipboardEventListener.stopListening();
-}, 10000);
+  await clipboard.writeImage(base64img);
+  console.log();
+  console.assert((await clipboard.readImageBase64()) === base64img);
+  clipboard.on("text", (text) => {
+    console.log(text);
+  });
+  clipboard.on("image", (data) => {
+    fs.writeFileSync("test.png", data);
+  });
+  clipboard.listen();
+  setTimeout(() => {
+    clipboard.close();
+  }, 10000);
 ```
+
+### Note
+
+This is an important note. If you write some data and read it immediately using the `sync` APIs, you may not be able to get the data.
+It needs a tiny bit of time to process. any code between the two lines should work, such as `console.log()`.
+
+Here I use `await sleep(1)` to make it work.
+
+```js
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+cb.writeTextSync("abc");
+await sleep(1);
+const text = cb.readTextSync();
+```
+
+If this package becomes popular some day and people requires a fix, I will fix it. For now, this implementation is good enough for CrossCopy.
+
+I never need to write and read immediately after unless during testing.
 
 ## Explanation
 
