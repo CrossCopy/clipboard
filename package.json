@@ -35,7 +35,7 @@
   },
   "files": [
     "dist",
-    "go-clipboard-monitor",
+    "go-clipboard",
     "README.md"
   ]
 }

@@ -17,11 +17,11 @@ class ClipboardEventListener extends EventEmitter {
     if (path.basename(__dirname) === 'dist') {
       pathArr.push('..');
     }
-    let exeFilename = `go-clipboard-monitor-${platform}-${arch}`;
+    let exeFilename = `go-clipboard-${platform}-${arch}`;
     if (platform === 'win32') {
       exeFilename += '.exe';
     }
-    pathArr.push(...['go-clipboard-monitor', exeFilename]);
+    pathArr.push(...['go-clipboard', exeFilename]);
     const exePath = path.join(...pathArr);
     if (!fs.existsSync(exePath)) {
       throw new Error(

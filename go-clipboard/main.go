@@ -21,14 +21,16 @@ func main() {
 	wg.Add(1)
 	go func() {
 		for range textCh {
-			fmt.Println("TEXT_CHANGED")
+			fmt.Println("TEXT_CHANGED") // write TEXT_CHANGED to stdout for parent process to detect clipboard text update
+			//cbText := clipboard.Read(clipboard.FmtText)
 		}
 	}()
 	imageCh := clipboard.Watch(context.TODO(), clipboard.FmtImage)
 	wg.Add(1)
 	go func() {
 		for range imageCh {
-			fmt.Println("IMAGE_CHANGED")
+			fmt.Println("IMAGE_CHANGED") // write IMAGE_CHANGED to stdout for parent process to detect clipboard image update
+			//cbImage := clipboard.Read(clipboard.FmtImage)
 		}
 	}()
 	wg.Wait()
