@@ -3,7 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const { execFile } = require("node:child_process");
 
-var server = net.createServer(function (connection) {
+const server = net.createServer(function (connection) {
   console.log("client connected");
 
   let data = "";
@@ -15,7 +15,7 @@ var server = net.createServer(function (connection) {
   connection.on("data", (packet) => {
     data += packet.toString();
   });
-
+  
   connection.on("close", () => {
     const strData = data.toString();
     const subStr = strData.substring(0, 14);

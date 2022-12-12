@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"context"
 	"encoding/base64"
 	"fmt"
@@ -18,6 +19,35 @@ func main() {
 	if len(os.Args) == 2 {
 		port = os.Args[1]
 	}
+
+	if os.Args[1] == "READ_TEXT" {
+		cbText := clipboard.Read(clipboard.FmtText)
+		fmt.Print(base64.StdEncoding.EncodeToString(cbText))
+		return
+	}
+
+	if os.Args[1] == "READ_IMAGE" {
+		cbImage := clipboard.Read(clipboard.FmtImage)
+		fmt.Println(base64.StdEncoding.EncodeToString(cbImage))
+		return
+	}
+
+	if os.Args[1] == "WRITE_TEXT" {
+		reader := bufio.NewReader(os.Stdin)
+		text, _ := reader.ReadString('\n')
+		clipboard.Write(clipboard.FmtText, []byte(text))
+		return
+	}
+
+	// This works with base64 string
+	if os.Args[1] == "WRITE_IMAGE" {
+		reader := bufio.NewReader(os.Stdin)
+		data, _ := reader.ReadString('\n')
+		imgBuf, _ := base64.StdEncoding.DecodeString(data)
+		clipboard.Write(clipboard.FmtImage, imgBuf)
+		return
+	}
+
 	address := fmt.Sprintf("localhost:%s", port)
 	fmt.Printf("Client Started, Connecting to %s", address)
 
@@ -40,10 +70,13 @@ func main() {
 	wg.Add(1)
 	go func() {
 		for data := range textCh {
-			fmt.Println("TEXT_CHANGED") // write TEXT_CHANGED to stdout for parent process to detect clipboard text update
+			textCon, err := net.Dial("tcp", address)
+			checkErr(err)
+			// fmt.Println("TEXT_CHANGED") // write TEXT_CHANGED to stdout for parent process to detect clipboard text update
 			// cbText := clipboard.Read(clipboard.FmtText)
 			payload := "TEXT_CHANGED:" + base64.StdEncoding.EncodeToString(data)
-			con.Write([]byte(payload))
+			textCon.Write([]byte(payload))
+			textCon.Close()
 		}
 
 	}()
