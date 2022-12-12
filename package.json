@@ -25,7 +25,8 @@
   },
   "homepage": "https://github.com/HuakunShen/general-clipboard-listener#readme",
   "dependencies": {
-    "events": "^3.3.0"
+    "events": "^3.3.0",
+    "execa": "^6.1.0"
   },
   "devDependencies": {
     "@types/node": "^18.11.7",
