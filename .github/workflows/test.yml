@@ -9,9 +9,9 @@ jobs:
       matrix:
         node-version: [16.x, 18.x]
         os:
-          - ubuntu-latest
-          - macos-latest
-          - windows-latest
+          # - ubuntu-latest
+          # - macos-latest
+          # - windows-latest
 
 
     steps:
@@ -23,7 +23,8 @@ jobs:
           go-version: 1.19
 
       - name: Build Go Executable
-        run: go build -v -o go-clipboard/binaries/go-clipboard-linux-amd64 ./go-clipboard/main.go
+        run: go build -v -o go-clipboard/binaries/go-clipboard-win32-x64.exe ./go-clipboard/main.go
+        # run: go build -v -o go-clipboard/binaries/go-clipboard-linux-amd64 ./go-clipboard/main.go
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
