@@ -94,3 +94,16 @@ The process here is from nodejs.
 Supported platforms can be found in `go-clipboard-monitor`.
 
 If your nodejs gives different platform or arch, it may not work.
+
+## Release
+
+Cross Compile doesn't work due to some CGO problem. Have to build on different platforms manually.
+
+```bash
+go build -o binaries/go-clipboard-darwin-arm64
+go build -o binaries/go-clipboard-darwin-x64
+go build -o binaries/go-clipboard-win32-x64.exe
+go build -o binaries/go-clipboard-linux-x64
+go build -o binaries/go-clipboard-linux-arm
+go build -o binaries/go-clipboard-linux-arm64
+```
