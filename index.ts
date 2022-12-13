@@ -150,7 +150,7 @@ export class Clipboard {
       });
     });
 
-    this.server.listen(8090, () => {
+    this.server.listen(19559, () => {
       const addr = this.server?.address();
       if (!addr)
         throw new Error("Unexpected Error: TCP Socket Server not Started");
