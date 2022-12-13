@@ -170,12 +170,15 @@ export class Clipboard {
     return res;
   }
 
-  on(event: "text", cb: (text: string) => void): void;
-  on(event: "image", cb: (text: string) => void): void;
-  on(event: "close", cb: (text: string) => void): void;
-  on(event: "text" | "image" | "close", cb: (text: string) => void): void {
+  on(event: "text", cb: TextCallback): void;
+  on(event: "image", cb: ImageCallback): void;
+  on(event: "close", cb: () => void): void;
+  on(event: "text" | "image" | "close", cb: ImageCallback | TextCallback): void {
     this.emitter.on(event, cb);
   }
 }
+
+type TextCallback = (data: string) => void
+type ImageCallback = (data: Buffer) => void
 
 export default new Clipboard();

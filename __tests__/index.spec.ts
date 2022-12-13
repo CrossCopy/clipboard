@@ -6,14 +6,14 @@ const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 describe("Test Text Clipboard", () => {
   it("Synchronous Clipboard Text Methods", async () => {
     cb.writeTextSync("abc");
-    await sleep(10);
+    await sleep(100);
     const text = cb.readTextSync();
     expect(text).toBe("abc");
   });
 
   it("Async Clipboard Text", async () => {
     await cb.writeText("def");
-    await sleep(10);
+    await sleep(100);
     expect(await cb.readText()).toBe("def");
   });
 
