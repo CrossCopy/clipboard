@@ -14,7 +14,7 @@ import (
 )
 
 // All possible ways to call this program
-// 1. client				(set up TCP socket client to connect to default port 8090)
+// 1. client				(set up TCP socket client to connect to default port 19559)
 // 2. client 9999			(set up TCP socket client to connect to custom port 9999)
 // 3. client READ_TEXT		(Read Text from clipboard and output to stdout)
 // 4. client READ_IMAGE		(Read Image from clipboard and output to stdout in base64 encoding, whoever is reading this must decode it into bytes)
@@ -22,7 +22,7 @@ import (
 // 6. client WRITE_IMAGE	(Write Image to clipboard, data passed in through stdin, read as string, in base64 format. Have to decode into buffer before saving to clipboard)
 func main() {
 	err := clipboard.Init()
-	var port = "8090"
+	var port = "19559"
 	if len(os.Args) == 2 {
 		if os.Args[1] == "READ_TEXT" {
 			cbText := clipboard.Read(clipboard.FmtText)
