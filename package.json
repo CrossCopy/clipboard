@@ -1,6 +1,6 @@
 {
   "name": "@crosscopy/clipboard",
-  "version": "0.1.0-beta",
+  "version": "0.1.0-beta-1",
   "description": "Cross Platform Clipboard listener that detects both text and image update in clipboard",
   "source": "index.ts",
   "types": "./dist/index.d.ts",
@@ -25,10 +25,7 @@
     "url": "https://github.com/HuakunShen/general-clipboard-listener/issues"
   },
   "homepage": "https://github.com/HuakunShen/general-clipboard-listener#readme",
-  "dependencies": {
-    "events": "^3.3.0",
-    "execa": "^6.1.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@jest/globals": "^29.3.1",
     "@types/jest": "^29.2.4",
@@ -41,7 +38,7 @@
   },
   "files": [
     "dist",
-    "go-clipboard",
+    "go-clipboard/binaries",
     "README.md"
   ]
 }
