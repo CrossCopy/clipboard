@@ -76,6 +76,9 @@ export class Clipboard {
       ]);
       writeImageProcess.stdin?.write(data);
       writeImageProcess.stdin?.end();
+      // writeImageProcess.stdout?.on("data", (data_) => {
+      //   console.log(data_);
+      // });
     } else if (data instanceof Buffer) {
       this.writeImageSync(data.toString("base64"));
     } else {
@@ -173,12 +176,15 @@ export class Clipboard {
   on(event: "text", cb: TextCallback): void;
   on(event: "image", cb: ImageCallback): void;
   on(event: "close", cb: () => void): void;
-  on(event: "text" | "image" | "close", cb: ImageCallback | TextCallback): void {
+  on(
+    event: "text" | "image" | "close",
+    cb: ImageCallback | TextCallback
+  ): void {
     this.emitter.on(event, cb);
   }
 }
 
-type TextCallback = (data: string) => void
-type ImageCallback = (data: Buffer) => void
+type TextCallback = (data: string) => void;
+type ImageCallback = (data: Buffer) => void;
 
 export default new Clipboard();

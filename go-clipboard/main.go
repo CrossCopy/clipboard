@@ -53,15 +53,13 @@ func main() {
 			data, _ := reader.ReadString('\n') // string in base64
 			imgBuf, _ := base64.StdEncoding.DecodeString(data)
 
-			// imgBuf := []byte(strings.TrimSpace(data))
 			os_ := runtime.GOOS
 			switch os_ {
 			case "linux":
 				lib.XclipWriteImage(imgBuf)
 			default:
-				clipboard.Write(clipboard.FmtText, imgBuf)
+				clipboard.Write(clipboard.FmtImage, imgBuf)
 			}
-			time.Sleep(100 * time.Millisecond)
 			// imgBuf, _ := base64.StdEncoding.DecodeString(data)
 			// clipboard.Write(clipboard.FmtImage, imgBuf)
 			return
