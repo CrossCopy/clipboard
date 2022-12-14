@@ -3,7 +3,7 @@ import { base64img } from "./data";
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
-describe("Test Text Clipboard", () => {
+describe("Test Clipboard Read and Write", () => {
   it("Synchronous Clipboard Text Methods", async () => {
     cb.writeTextSync("abc");
     const text = cb.readTextSync();
@@ -19,7 +19,7 @@ describe("Test Text Clipboard", () => {
     cb.writeImageSync(base64img);
     expect(cb.readImageBase64Sync()).toBe(base64img);
     cb.writeImageSync(base64img);
-    expect((cb.readImageSync()).toString("base64")).toBe(base64img);
+    expect(cb.readImageSync().toString("base64")).toBe(base64img);
   });
 
   it("Asynchronous Cliipboard Image Methods", async () => {
