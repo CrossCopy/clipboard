@@ -17,7 +17,7 @@ describe("Test Text Clipboard", () => {
     expect(await cb.readText()).toBe("def");
   });
 
-  it("Synchronous Cliipboard Image Methods", async () => {
+  it("Synchronous Clipboard Image Methods", async () => {
     cb.writeImageSync(base64img);
     await sleep(100);
     expect(cb.readImageBase64Sync()).toBe(base64img);

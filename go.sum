@@ -1,6 +1,8 @@
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
 github.com/Microsoft/go-winio v0.4.16 h1:FtSW/jqD+l4ba5iPBj9CODVtgfYAD8w2wS923g/cFDk=
 github.com/Microsoft/go-winio v0.4.16/go.mod h1:XB6nPKklQyQ7GC9LdcBEcBl8PF76WugXOPRXwdLnMv0=
+github.com/ZacJoffe/clipboard v0.0.0-20190414232103-e1d59897bf29 h1:FYI7oeoh14IlEJxN+zC6VtU75UDA+oqM/2/xiS1Sgls=
+github.com/ZacJoffe/clipboard v0.0.0-20190414232103-e1d59897bf29/go.mod h1:xcfkWpLs2j7ZNabuXDJ/+VsoCxNxWL/WRssfVxJkTwc=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/james-barrow/golang-ipc v1.0.0 h1:ZOZtmgQMC8WE4pm1pvTQQzeo+G+FGUt3PsJiDSPdKPA=
 github.com/james-barrow/golang-ipc v1.0.0/go.mod h1:M3eGiVVY7bdtqyWT+gtbIqji7CqHi3PKJHSPl2pP40c=

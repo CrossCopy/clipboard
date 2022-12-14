@@ -8,8 +8,11 @@ import (
 	"log"
 	"net"
 	"os"
+	"runtime"
 	"sync"
+	"time"
 
+	"github.com/CrossCopy/clipboard/go-clipboard/lib"
 	"golang.design/x/clipboard"
 )
 
@@ -40,15 +43,27 @@ func main() {
 			reader := bufio.NewReader(os.Stdin)
 			text, _ := reader.ReadString('\n')
 			clipboard.Write(clipboard.FmtText, []byte(text))
+			time.Sleep(100 * time.Millisecond)
 			return
 		}
 
 		// This works with base64 string
 		if os.Args[1] == "WRITE_IMAGE" {
 			reader := bufio.NewReader(os.Stdin)
-			data, _ := reader.ReadString('\n')
+			data, _ := reader.ReadString('\n') // string in base64
 			imgBuf, _ := base64.StdEncoding.DecodeString(data)
-			clipboard.Write(clipboard.FmtImage, imgBuf)
+
+			// imgBuf := []byte(strings.TrimSpace(data))
+			os_ := runtime.GOOS
+			switch os_ {
+			case "linux":
+				lib.XclipWriteImage(imgBuf)
+			default:
+				clipboard.Write(clipboard.FmtText, imgBuf)
+			}
+			time.Sleep(100 * time.Millisecond)
+			// imgBuf, _ := base64.StdEncoding.DecodeString(data)
+			// clipboard.Write(clipboard.FmtImage, imgBuf)
 			return
 		}
 		// If none of the above are true, then parent process is calling me for setting up a TCP socket connection
