@@ -28,13 +28,13 @@ func XclipWriteImage(imgBuf []byte) error {
 	if err != nil {
 		return err
 	}
-	// defer os.RemoveAll(tempDir)
+	defer os.RemoveAll(tempDir)
 
 	file, err := ioutil.TempFile(tempDir, "screenshot-*.png")
 	if err != nil {
 		return err
 	}
-	// defer os.Remove(file.Name())
+	defer os.Remove(file.Name())
 
 	if _, err := file.Write(imgBuf); err != nil {
 		fmt.Println(err)
