@@ -10,7 +10,6 @@ import (
 	"os"
 	"runtime"
 	"sync"
-	"time"
 
 	"github.com/CrossCopy/clipboard/go-clipboard/lib"
 	"golang.design/x/clipboard"
@@ -43,7 +42,7 @@ func main() {
 			reader := bufio.NewReader(os.Stdin)
 			text, _ := reader.ReadString('\n')
 			clipboard.Write(clipboard.FmtText, []byte(text))
-			time.Sleep(100 * time.Millisecond)
+			// fmt.Fprintf(os.Stderr, "Testing Stderr")
 			return
 		}
 

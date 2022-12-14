@@ -60,25 +60,32 @@ export class Clipboard {
   }
 
   writeTextSync(content: string): void {
-    const writeTextProcess = execFile(this.goClipboardPath, [
-      ClipboardOperation.WRITE_TEXT,
-    ]);
-    writeTextProcess.stdin?.write(content);
-    writeTextProcess.stdin?.end();
+    const writeTextProcess = execFileSync(
+      this.goClipboardPath,
+      [ClipboardOperation.WRITE_TEXT],
+      {
+        input: content,
+        // TODO: consider using stdio to get stderr using pipe and handle error
+        // https://nodejs.org/api/child_process.html#child_processexecfilesyncfile-args-options
+        // stdio:
+      }
+    );
   }
 
   writeImageSync(base64ImgStr: string): void;
   writeImageSync(imgBuf: Buffer): void;
   writeImageSync(data: string | Buffer): void {
     if (data instanceof String || typeof data === "string") {
-      const writeImageProcess = execFile(this.goClipboardPath, [
-        ClipboardOperation.WRITE_IMAGE,
-      ]);
-      writeImageProcess.stdin?.write(data);
-      writeImageProcess.stdin?.end();
-      // writeImageProcess.stdout?.on("data", (data_) => {
-      //   console.log(data_);
-      // });
+      const writeImageProcess = execFileSync(
+        this.goClipboardPath,
+        [ClipboardOperation.WRITE_IMAGE],
+        {
+          input: data,
+          // TODO: consider using stdio to get stderr using pipe and handle error
+          // https://nodejs.org/api/child_process.html#child_processexecfilesyncfile-args-options
+          // stdio:
+        }
+      );
     } else if (data instanceof Buffer) {
       this.writeImageSync(data.toString("base64"));
     } else {
