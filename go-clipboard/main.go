@@ -12,6 +12,7 @@ import (
 	"sync"
 
 	"github.com/CrossCopy/clipboard/go-clipboard/lib"
+	"github.com/ZacJoffe/clipboard/xclip"
 	"golang.design/x/clipboard"
 )
 
@@ -25,6 +26,7 @@ import (
 func main() {
 	err := clipboard.Init()
 	var port = "19559"
+	os_ := runtime.GOOS
 	if len(os.Args) == 2 {
 		if os.Args[1] == "READ_TEXT" {
 			cbText := clipboard.Read(clipboard.FmtText)
@@ -41,7 +43,16 @@ func main() {
 		if os.Args[1] == "WRITE_TEXT" {
 			reader := bufio.NewReader(os.Stdin)
 			text, _ := reader.ReadString('\n')
-			clipboard.Write(clipboard.FmtText, []byte(text))
+			if os_ == "linux" {
+				if err := xclip.WriteText(text); err != nil {
+					panic(err)
+				}
+			} else if os_ == "windows" {
+				panic("Case not Handled, Writing Image isn't supported on Windows in this package. Use powershell script in nodejs instead.")
+			} else {
+				// this only works on Mac
+				clipboard.Write(clipboard.FmtText, []byte(text))
+			}
 			// fmt.Fprintf(os.Stderr, "Testing Stderr")
 			return
 		}
@@ -52,7 +63,6 @@ func main() {
 			data, _ := reader.ReadString('\n') // string in base64
 			imgBuf, _ := base64.StdEncoding.DecodeString(data)
 
-			os_ := runtime.GOOS
 			switch os_ {
 			case "linux":
 				lib.XclipWriteImage(imgBuf)
