@@ -2,7 +2,7 @@ package lib
 
 import (
 	"fmt"
-	"io/ioutil"
+	"log"
 	"os"
 
 	"github.com/ZacJoffe/clipboard/xclip"
@@ -24,13 +24,13 @@ func XclipWriteImage(imgBuf []byte) error {
 		return err
 	}
 
-	tempDir, err := ioutil.TempDir("", "crosscopy-img-")
+	tempDir, err := os.MkdirTemp("", "crosscopy-img-")
 	if err != nil {
 		return err
 	}
 	defer os.RemoveAll(tempDir)
 
-	file, err := ioutil.TempFile(tempDir, "screenshot-*.png")
+	file, err := os.CreateTemp(tempDir, "screenshot-*.png")
 	if err != nil {
 		return err
 	}
@@ -45,10 +45,8 @@ func XclipWriteImage(imgBuf []byte) error {
 		return err
 	}
 
-	xclip.WriteImage(image)
-
-	if err != nil {
-		fmt.Println(err)
+	if err := xclip.WriteImage(image); err != nil {
+		log.Fatal(err)
 	}
 	return nil
 }

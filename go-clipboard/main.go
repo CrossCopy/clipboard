@@ -56,6 +56,13 @@ func main() {
 			switch os_ {
 			case "linux":
 				lib.XclipWriteImage(imgBuf)
+			// * the following doesn't work yet.
+			// * executing powershell using golang results in out of memory error
+			// * not sure how to resolve, I switched to running powershell in nodejs (works)
+			// case "windows":
+			// 	if err := lib.WindowsPowershellWriteImage(imgBuf); err != nil {
+			// 		log.Fatal(err)
+			// 	}
 			default:
 				clipboard.Write(clipboard.FmtImage, imgBuf)
 			}

@@ -3,11 +3,13 @@
 param (
     [string]$imagePath
 )
-Write-Output $imagePath
-# # Load the image into a System.Drawing.Image object
-$image = [System.Drawing.Image]::FromFile($imagePath)
 
+# # Load the image into a System.Drawing.Image object
+[void] [System.Reflection.Assembly]::LoadWithPartialName("System.Drawing")
+$image = [System.Drawing.Image]::FromFile($imagePath)
+# Write-Output $image
 # # Write the image to the clipboard
 # https://learn.microsoft.com/en-us/dotnet/api/system.windows.forms.clipboard?view=windowsdesktop-7.0
+[void] [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms")
 [System.Windows.Forms.Clipboard]::SetData("PNG", $image)
 [System.Windows.Forms.Clipboard]::SetImage($image)

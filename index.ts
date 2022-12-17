@@ -1,3 +1,4 @@
+import os from 'node:os';
 import fs from "node:fs";
 import path from "node:path";
 import { EventEmitter } from "node:events";
@@ -76,16 +77,26 @@ export class Clipboard {
   writeImageSync(imgBuf: Buffer): void;
   writeImageSync(data: string | Buffer): void {
     if (data instanceof String || typeof data === "string") {
-      const writeImageProcess = execFileSync(
-        this.goClipboardPath,
-        [ClipboardOperation.WRITE_IMAGE],
-        {
-          input: data,
-          // TODO: consider using stdio to get stderr using pipe and handle error
-          // https://nodejs.org/api/child_process.html#child_processexecfilesyncfile-args-options
-          // stdio:
+      if (process.platform === "win32") {
+        const tmpDir = os.tmpdir()
+        const imgPath = path.join(tmpDir, "tmp.png")
+        const imgBuf = Buffer.from(data, 'base64')
+        fs.writeFileSync(imgPath , imgBuf)
+        const scriptPath = path.join(this.goClipboardPath, "..", "..", "scripts", "win", "write_image.ps1")
+        console.log(scriptPath);
+        execFileSync('powershell', [scriptPath, '-imagePath', imgPath])
+      } else {
+        const writeImageProcess = execFileSync(
+          this.goClipboardPath,
+          [ClipboardOperation.WRITE_IMAGE],
+          {
+            input: data,
+            // TODO: consider using stdio to get stderr using pipe and handle error
+            // https://nodejs.org/api/child_process.html#child_processexecfilesyncfile-args-options
+            // stdio:
+          }
+          );
         }
-      );
     } else if (data instanceof Buffer) {
       this.writeImageSync(data.toString("base64"));
     } else {
@@ -113,12 +124,23 @@ export class Clipboard {
   }
 
   readImageSync(): Buffer {
+    // * The following commented out code is for reading image on windows using powershell script
+    // * I wrote the script when I was working on writing image to clipboard on windows with powershell
+    // * The go clipboard also works.
+    // * After testing, the powershell version is around 31 times slower than the go-clipboard version
+    // * powershell takes around 0.5 second to read, while go clipboard takes ~20ms.
+    // * I will keep the script here for now as an alternative, in case we need it in the future.
+    // if (process.platform === "win32") {
+    //   const scriptPath = path.join(this.goClipboardPath, "..", "..", "scripts", "win", "read_image.ps1")
+    //   const buf = execFileSync('powershell', [scriptPath])
+    //   return Buffer.from(buf.toString(), 'base64')
+    // }
     const buf = execFileSync(this.goClipboardPath, [
       ClipboardOperation.READ_IMAGE,
     ]);
     const stdoutStr = buf.toString();
     const imgBuf = Buffer.from(stdoutStr, "base64");
-    fs.writeFileSync("test.png", imgBuf);
+    // fs.writeFileSync("test.png", imgBuf); // for debugging only
     return imgBuf;
   }
 
