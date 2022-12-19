@@ -1,0 +1,66 @@
+name: Build Executable
+
+on: 
+  push:
+    branches: [main, ci]
+
+jobs:
+  build_mac_executable:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.19
+      - name: go build executable
+        run: |
+          go build -v -o go-clipboard/binaries/go-clipboard-darwin-x64 ./go-clipboard/main.go
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: mac-artifact
+          retention-days: 5
+          path: |
+            go-clipboard/binaries/go-clipboard-darwin-x64
+
+  build_windows_executable:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.19
+      - name: go build executable
+        run: |
+          go build -v -o go-clipboard/binaries/go-clipboard-win32-x64 ./go-clipboard/main.go
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: windows-artifact
+          retention-days: 5
+          path: |
+            go-clipboard/binaries/go-clipboard-win32-x64
+
+  build_linux_executable:
+    runs-on: linux-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.19
+      - name: go build executable
+        run: |
+          go build -v -o go-clipboard/binaries/go-clipboard-linux-x64 ./go-clipboard/main.go
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: linux-artifact
+          retention-days: 5
+          path: |
+            go-clipboard/binaries/go-clipboard-linux-x64
