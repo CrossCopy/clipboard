@@ -3,37 +3,37 @@ name: Test
 on: [push, pull_request]
 
 jobs:
-  test-linux:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        node-version: [18.x]
-        os:
-          - ubuntu-latest
-          # - macos-latest
-          # - windows-latest
-    steps:
-      - uses: actions/checkout@v3
+  # test-linux:
+  #   runs-on: ${{ matrix.os }}
+  #   strategy:
+  #     matrix:
+  #       node-version: [18.x]
+  #       os:
+  #         - ubuntu-latest
+  #         # - macos-latest
+  #         # - windows-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
 
-      - name: Set up Go
-        uses: actions/setup-go@v3
-        with:
-          go-version: 1.19
+  #     - name: Set up Go
+  #       uses: actions/setup-go@v3
+  #       with:
+  #         go-version: 1.19
 
-      - name: Build Go Executable
-        # run: go build -v -o go-clipboard/binaries/go-clipboard-win32-x64.exe ./go-clipboard/main.go
-        run: go build -v -o go-clipboard/binaries/go-clipboard-linux-x64 ./go-clipboard/main.go
+  #     - name: Build Go Executable
+  #       # run: go build -v -o go-clipboard/binaries/go-clipboard-win32-x64.exe ./go-clipboard/main.go
+  #       run: go build -v -o go-clipboard/binaries/go-clipboard-linux-x64 ./go-clipboard/main.go
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: "npm"
-      - name: Install System Dependencies
-        run: sudo apt-get update -y && sudo apt install xclip xsel -y
-      - run: npm ci
-      - run: npm run build --if-present
-      - run: npm test
+  #     - name: Use Node.js ${{ matrix.node-version }}
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: ${{ matrix.node-version }}
+  #         cache: "npm"
+  #     - name: Install System Dependencies
+  #       run: sudo apt-get update -y && sudo apt install xclip xsel -y
+  #     - run: npm ci
+  #     - run: npm run build --if-present
+  #     - run: npm test
 
   test-macos:
     runs-on: ${{ matrix.os }}
@@ -66,32 +66,32 @@ jobs:
       - run: npm test
 
   
-  test-windows:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        node-version: [18.x]
-        os:
-          # - ubuntu-latest
-          # - macos-latest
-          - windows-latest
-    steps:
-      - uses: actions/checkout@v3
+  # test-windows:
+  #   runs-on: ${{ matrix.os }}
+  #   strategy:
+  #     matrix:
+  #       node-version: [18.x]
+  #       os:
+  #         # - ubuntu-latest
+  #         # - macos-latest
+  #         - windows-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
 
-      - name: Set up Go
-        uses: actions/setup-go@v3
-        with:
-          go-version: 1.19
+  #     - name: Set up Go
+  #       uses: actions/setup-go@v3
+  #       with:
+  #         go-version: 1.19
 
-      - name: Build Go Executable
-        # run: go build -v -o go-clipboard/binaries/go-clipboard-win32-x64.exe ./go-clipboard/main.go
-        run: go build -v -o go-clipboard/binaries/go-clipboard-win32-x64 ./go-clipboard/main.go
+  #     - name: Build Go Executable
+  #       # run: go build -v -o go-clipboard/binaries/go-clipboard-win32-x64.exe ./go-clipboard/main.go
+  #       run: go build -v -o go-clipboard/binaries/go-clipboard-win32-x64 ./go-clipboard/main.go
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: "npm"
-      - run: npm ci
-      - run: npm run build --if-present
-      - run: npm test
+  #     - name: Use Node.js ${{ matrix.node-version }}
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: ${{ matrix.node-version }}
+  #         cache: "npm"
+  #     - run: npm ci
+  #     - run: npm run build --if-present
+  #     - run: npm test

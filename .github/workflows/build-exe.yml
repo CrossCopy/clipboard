@@ -20,9 +20,10 @@ jobs:
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: go built executable
+          name: mac-artifact
+          retention-days: 5
           path: |
-            go-clipboard/binaries
+            go-clipboard/binaries/go-clipboard-darwin-x64
 
   build_windows_executable:
     runs-on: windows-latest
@@ -39,9 +40,10 @@ jobs:
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: go built executable
+          name: windows-artifact
+          retention-days: 5
           path: |
-            go-clipboard/binaries
+            go-clipboard/binaries/go-clipboard-win32-x64
 
   build_linux_executable:
     runs-on: linux-latest
@@ -58,6 +60,7 @@ jobs:
       - name: Archive production artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: go built executable
+          name: linux-artifact
+          retention-days: 5
           path: |
-            go-clipboard/binaries
+            go-clipboard/binaries/go-clipboard-linux-x64
