@@ -1,4 +1,4 @@
-import os from 'node:os';
+import os from "node:os";
 import fs from "node:fs";
 import path from "node:path";
 import { EventEmitter } from "node:events";
@@ -65,10 +65,12 @@ export class Clipboard {
       this.goClipboardPath,
       [ClipboardOperation.WRITE_TEXT],
       {
-        input: content,
+        input: Buffer.from(content).toString('base64'),
+        // stdio: "inherit",
         // TODO: consider using stdio to get stderr using pipe and handle error
+        // stderr should be auto piped to parent process
         // https://nodejs.org/api/child_process.html#child_processexecfilesyncfile-args-options
-        // stdio:
+        // stdio: ['pipe']
       }
     );
   }
@@ -78,13 +80,20 @@ export class Clipboard {
   writeImageSync(data: string | Buffer): void {
     if (data instanceof String || typeof data === "string") {
       if (process.platform === "win32") {
-        const tmpDir = os.tmpdir()
-        const imgPath = path.join(tmpDir, "tmp.png")
-        const imgBuf = Buffer.from(data, 'base64')
-        fs.writeFileSync(imgPath , imgBuf)
-        const scriptPath = path.join(this.goClipboardPath, "..", "..", "scripts", "win", "write_image.ps1")
+        const tmpDir = os.tmpdir();
+        const imgPath = path.join(tmpDir, "tmp.png");
+        const imgBuf = Buffer.from(data, "base64");
+        fs.writeFileSync(imgPath, imgBuf);
+        const scriptPath = path.join(
+          this.goClipboardPath,
+          "..",
+          "..",
+          "scripts",
+          "win",
+          "write_image.ps1"
+        );
         console.log(scriptPath);
-        execFileSync('powershell', [scriptPath, '-imagePath', imgPath])
+        execFileSync("powershell", [scriptPath, "-imagePath", imgPath]);
       } else {
         const writeImageProcess = execFileSync(
           this.goClipboardPath,
@@ -95,8 +104,8 @@ export class Clipboard {
             // https://nodejs.org/api/child_process.html#child_processexecfilesyncfile-args-options
             // stdio:
           }
-          );
-        }
+        );
+      }
     } else if (data instanceof Buffer) {
       this.writeImageSync(data.toString("base64"));
     } else {

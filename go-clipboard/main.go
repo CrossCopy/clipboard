@@ -43,15 +43,20 @@ func main() {
 		if os.Args[1] == "WRITE_TEXT" {
 			reader := bufio.NewReader(os.Stdin)
 			text, _ := reader.ReadString('\n')
+
+			decodedContent, err := base64.StdEncoding.DecodeString(text)
+			if err != nil {
+				log.Fatal(err)
+			}
+			decodedContentStr := string(decodedContent)
 			if os_ == "linux" {
-				if err := xclip.WriteText(text); err != nil {
+				if err := xclip.WriteText(decodedContentStr); err != nil {
+					fmt.Fprintf(os.Stderr, "")
 					panic(err)
 				}
-			} else if os_ == "windows" {
-				panic("Case not Handled, Writing Image isn't supported on Windows in this package. Use powershell script in nodejs instead.")
 			} else {
 				// this only works on Mac
-				clipboard.Write(clipboard.FmtText, []byte(text))
+				clipboard.Write(clipboard.FmtText, []byte(decodedContentStr))
 			}
 			// fmt.Fprintf(os.Stderr, "Testing Stderr")
 			return
@@ -66,13 +71,15 @@ func main() {
 			switch os_ {
 			case "linux":
 				lib.XclipWriteImage(imgBuf)
+
 			// * the following doesn't work yet.
 			// * executing powershell using golang results in out of memory error
 			// * not sure how to resolve, I switched to running powershell in nodejs (works)
-			// case "windows":
-			// 	if err := lib.WindowsPowershellWriteImage(imgBuf); err != nil {
-			// 		log.Fatal(err)
-			// 	}
+			case "windows":
+				clipboard.Write(clipboard.FmtImage, imgBuf)
+				// if err := lib.WindowsPowershellWriteImage(imgBuf); err != nil {
+				// 	log.Fatal(err)
+				// }
 			default:
 				clipboard.Write(clipboard.FmtImage, imgBuf)
 			}
