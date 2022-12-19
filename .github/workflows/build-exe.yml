@@ -1,7 +1,8 @@
-name: Test
+name: Build Executable
 
 on: 
-  push: [main, ci]
+  push:
+    branches: [main, ci]
 
 jobs:
   build_mac_executable:
