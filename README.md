@@ -53,25 +53,6 @@ console.log(clipboard.readTextSync());
   }, 10000);
 ```
 
-### Note
-
-This is an important note. If you write some data and read it immediately using the `sync` APIs, you may not be able to get the data.
-It needs a tiny bit of time to process. any code between the two lines should work, such as `console.log()`.
-
-Here I use `await sleep(1)` to make it work.
-
-```js
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-
-cb.writeTextSync("abc");
-await sleep(1);
-const text = cb.readTextSync();
-```
-
-If this package becomes popular some day and people requires a fix, I will fix it. For now, this implementation is good enough for CrossCopy.
-
-I never need to write and read immediately after unless during testing.
-
 ## Explanation
 
 It's achieved using child process + `stdout`. 
