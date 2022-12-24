@@ -1,6 +1,6 @@
 {
   "name": "@crosscopy/clipboard",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Cross Platform Clipboard listener that detects both text and image update in clipboard",
   "source": "index.ts",
   "types": "./dist/index.d.ts",
@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/HuakunShen/general-clipboard-listener.git"
+    "url": "git+https://github.com/CrossCopy/clipboard.git"
   },
   "keywords": [
     "clipboard"
@@ -22,9 +22,9 @@
   "author": "Huakun Shen",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/HuakunShen/general-clipboard-listener/issues"
+    "url": "https://github.com/CrossCopy/clipboard/issues"
   },
-  "homepage": "https://github.com/HuakunShen/general-clipboard-listener#readme",
+  "homepage": "https://github.com/CrossCopy/clipboard#readme",
   "dependencies": {},
   "devDependencies": {
     "@jest/globals": "^29.3.1",

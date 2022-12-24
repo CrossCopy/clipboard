@@ -1,8 +1,10 @@
 # General Clipboard Listener
 
 > A Cross-Platform clipboard listener that listens for both text and image (screenshots).
+> Designed for NodeJS, not for web.
+> Provides API to read and write text/image from/to clipboard.
 
-npm package: https://www.npmjs.com/package/general-clipboard-listener
+npm package: https://www.npmjs.com/package/@crosscopy/clipboard
 
 ## Installation
 
@@ -98,6 +100,8 @@ If your nodejs gives different platform or arch, it may not work.
 ## Release
 
 Cross Compile doesn't work due to some CGO problem. Have to build on different platforms manually.
+
+Within `go-clipboard` folder.
 
 ```bash
 go build -o binaries/go-clipboard-darwin-arm64
