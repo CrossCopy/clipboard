@@ -74,7 +74,7 @@ Format: `process.platform/process.arch`
 
 The process here is from nodejs.
 
-Supported platforms can be found in `go-clipboard-monitor`.
+Supported platforms can be found in `go-clipboard/binaries`.
 
 If your nodejs gives different platform or arch, it may not work.
 

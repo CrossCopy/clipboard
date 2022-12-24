@@ -1,6 +1,6 @@
 {
   "name": "@crosscopy/clipboard",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Cross Platform Clipboard listener that detects both text and image update in clipboard",
   "source": "index.ts",
   "types": "./dist/index.d.ts",
