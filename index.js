@@ -295,12 +295,23 @@ if (!nativeBinding) {
   throw new Error(`Failed to load native binding`)
 }
 
-const { sum, availableFormats, getText, getTextAsync, setText, getImageBase64, setImageBase64 } = nativeBinding
+const { availableFormats, getText, setText, hasText, getImageBinary, getImageBase64, setImageBinary, setImageBase64, hasImage, getHtml, setHtml, hasHtml, getRtf, setRtf, hasRtf, clear, watch, callThreadsafeFunction } = nativeBinding
 
-module.exports.sum = sum
 module.exports.availableFormats = availableFormats
 module.exports.getText = getText
-module.exports.getTextAsync = getTextAsync
 module.exports.setText = setText
+module.exports.hasText = hasText
+module.exports.getImageBinary = getImageBinary
 module.exports.getImageBase64 = getImageBase64
+module.exports.setImageBinary = setImageBinary
 module.exports.setImageBase64 = setImageBase64
+module.exports.hasImage = hasImage
+module.exports.getHtml = getHtml
+module.exports.setHtml = setHtml
+module.exports.hasHtml = hasHtml
+module.exports.getRtf = getRtf
+module.exports.setRtf = setRtf
+module.exports.hasRtf = hasRtf
+module.exports.clear = clear
+module.exports.watch = watch
+module.exports.callThreadsafeFunction = callThreadsafeFunction

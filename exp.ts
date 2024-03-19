@@ -1,4 +1,3 @@
-import { getText, getImageBase64, Animal, asyncGetText } from "./index.js";
 import Clipboard from "./index.js";
 
 // const text = getText();
@@ -12,5 +11,14 @@ import Clipboard from "./index.js";
 
 // console.log(Animal.getText());
 
-console.log(Clipboard.getText());
-asyncGetText().then(console.log);
+// console.log(availableFormats());
+// console.log(await Clipboard.getText());
+// console.log(await Clipboard.getHtml());
+// console.log(Clipboard.hasImage());
+// console.log(await Clipboard.getImageBase64());
+
+// Clipboard.watch();
+Clipboard.callThreadsafeFunction((x: any) => {
+    console.log(x);
+    
+})
