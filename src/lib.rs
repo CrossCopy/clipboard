@@ -24,6 +24,12 @@ pub fn get_text() -> String {
 }
 
 #[napi]
+async fn get_text_async() -> String {
+  let ctx = ClipboardContext::new().unwrap();
+  ctx.get_text().unwrap()
+}
+
+#[napi]
 pub fn set_text(text: String) {
   let ctx = ClipboardContext::new().unwrap();
   ctx.set_text(text).unwrap()

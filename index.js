@@ -295,11 +295,12 @@ if (!nativeBinding) {
   throw new Error(`Failed to load native binding`)
 }
 
-const { sum, availableFormats, getText, setText, getImageBase64, setImageBase64 } = nativeBinding
+const { sum, availableFormats, getText, getTextAsync, setText, getImageBase64, setImageBase64 } = nativeBinding
 
 module.exports.sum = sum
 module.exports.availableFormats = availableFormats
 module.exports.getText = getText
+module.exports.getTextAsync = getTextAsync
 module.exports.setText = setText
 module.exports.getImageBase64 = getImageBase64
 module.exports.setImageBase64 = setImageBase64

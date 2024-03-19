@@ -9,9 +9,11 @@ crate-type = ["cdylib"]
 [dependencies]
 base64 = "0.22.0"
 clipboard-rs = "0.1.4"
+futures = "0.3.30"
 # Default enable napi4 feature, see https://nodejs.org/api/n-api.html#node-api-version-matrix
-napi = { version = "2.12.2", default-features = false, features = ["napi4"] }
+napi = { version = "2.12.2", default-features = false, features = ["napi4", "tokio_rt"] }
 napi-derive = "2.12.2"
+tokio = "1.36.0"
 
 [build-dependencies]
 napi-build = "2.0.1"

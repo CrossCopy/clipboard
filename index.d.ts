@@ -6,6 +6,7 @@
 export function sum(a: number, b: number): number
 export function availableFormats(): Array<string>
 export function getText(): string
+export function getTextAsync(): Promise<string>
 export function setText(text: string): void
 export function getImageBase64(): string
 export function setImageBase64(base64Str: string): void
