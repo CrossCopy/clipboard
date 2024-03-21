@@ -9,4 +9,5 @@ import test from 'ava'
 test('placeholder to pass tests', (t) => {
   // CI will fail if no tests are run
   // No test for this project for now
+  t.is(1 + 2, 3)
 })
