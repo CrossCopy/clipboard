@@ -1,7 +1,8 @@
 # Clipboard
 
-npm package: https://www.npmjs.com/package/@crosscopy/clipboard
-GitHub: https://github.com/crosscopy/clipboard
+**NPM Package**: https://www.npmjs.com/package/@crosscopy/clipboard
+
+**GitHub**: https://github.com/crosscopy/clipboard
 
 > This is a clipboard API npm package that allows you to copy and paste data to and from the clipboard.
 > There doesn't seem to be a good clipboard package for node.js (that supports data format beyond text), so I decided to make one.
@@ -44,3 +45,10 @@ if (await Clipboard.hasImage()) {
 ## Plan
 
 A clipboard listener will be added soon for monitoring clipboard changes and get notified when the clipboard content changes.
+
+## Publish
+
+Everything is done with GitHub Action.
+
+Run `npm version patch` to bump the version.
+Then `git push --follow-tags` to push the changes and tags to GitHub. GitHub Action will automatically build and publish.
