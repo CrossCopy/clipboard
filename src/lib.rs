@@ -7,7 +7,7 @@ use clipboard_rs::{
 use napi::{
   bindgen_prelude::*,
   threadsafe_function::{ErrorStrategy, ThreadsafeFunction, ThreadsafeFunctionCallMode},
-  CallContext, JsFunction, JsString,
+  JsFunction,
 };
 use std::{thread, time::Duration};
 
@@ -153,7 +153,6 @@ pub fn watch() {
   watcher.start_watch();
 }
 
- 
 #[napi]
 pub fn call_threadsafe_function(callback: JsFunction) -> Result<()> {
   let tsfn: ThreadsafeFunction<u32, ErrorStrategy::CalleeHandled> = callback
