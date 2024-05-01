@@ -1,5 +1,8 @@
 # Clipboard
 
+![NPM Version](https://img.shields.io/npm/v/@crosscopy/clipboard)
+[![CI](https://github.com/CrossCopy/clipboard/actions/workflows/CI.yml/badge.svg)](https://github.com/CrossCopy/clipboard/actions/workflows/CI.yml)
+
 **NPM Package**: https://www.npmjs.com/package/@crosscopy/clipboard
 
 **GitHub**: https://github.com/crosscopy/clipboard
