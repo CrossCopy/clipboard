@@ -9,7 +9,7 @@ use napi::{
   threadsafe_function::{ErrorStrategy, ThreadsafeFunction, ThreadsafeFunctionCallMode},
   JsFunction,
 };
-use std::{thread, time::Duration};
+use std::{panic::catch_unwind, thread, time::Duration};
 
 #[macro_use]
 extern crate napi_derive;
@@ -35,8 +35,11 @@ pub async fn set_text(text: String) {
 
 #[napi]
 pub fn has_text() -> bool {
-  let ctx = ClipboardContext::new().unwrap();
-  ctx.has(ContentFormat::Text)
+  catch_unwind(|| {
+    let ctx = ClipboardContext::new().unwrap();
+    ctx.has(ContentFormat::Text)
+  })
+  .unwrap_or(false)
 }
 
 #[napi]
@@ -69,8 +72,11 @@ pub async fn set_image_base64(base64_str: String) {
 
 #[napi]
 pub fn has_image() -> bool {
-  let ctx = ClipboardContext::new().unwrap();
-  ctx.has(ContentFormat::Image)
+  catch_unwind(|| {
+    let ctx = ClipboardContext::new().unwrap();
+    ctx.has(ContentFormat::Image)
+  })
+  .unwrap_or(false)
 }
 
 #[napi]
@@ -87,8 +93,11 @@ pub async fn set_html(html: String) {
 
 #[napi]
 fn has_html() -> bool {
-  let ctx = ClipboardContext::new().unwrap();
-  ctx.has(ContentFormat::Html)
+  catch_unwind(|| {
+    let ctx = ClipboardContext::new().unwrap();
+    ctx.has(ContentFormat::Html)
+  })
+  .unwrap_or(false)
 }
 
 #[napi]
@@ -105,8 +114,11 @@ pub async fn set_rtf(rtf: String) {
 
 #[napi]
 pub fn has_rtf() -> bool {
-  let ctx = ClipboardContext::new().unwrap();
-  ctx.has(ContentFormat::Rtf)
+  catch_unwind(|| {
+    let ctx = ClipboardContext::new().unwrap();
+    ctx.has(ContentFormat::Rtf)
+  })
+  .unwrap_or(false)
 }
 
 #[napi]
