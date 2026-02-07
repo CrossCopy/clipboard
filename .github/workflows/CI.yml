@@ -195,7 +195,10 @@ jobs:
         with:
           image: node:${{ matrix.node }}-slim
           options: '-v ${{ github.workspace }}:${{ github.workspace }} -w ${{ github.workspace }}'
-          run: yarn test
+          run: |
+            npm uninstall -g yarn pnpm
+            corepack enable
+            yarn test
   publish:
     name: Publish
     runs-on: ubuntu-latest
