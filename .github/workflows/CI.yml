@@ -196,9 +196,10 @@ jobs:
           image: node:${{ matrix.node }}-slim
           options: '-v ${{ github.workspace }}:${{ github.workspace }} -w ${{ github.workspace }}'
           run: |
+            apt-get update && apt-get install -y xvfb
             npm uninstall -g yarn pnpm
             corepack enable
-            yarn test
+            xvfb-run yarn test
   publish:
     name: Publish
     runs-on: ubuntu-latest
