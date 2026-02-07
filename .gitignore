@@ -195,5 +195,6 @@ Cargo.lock
 !.yarn/versions
 
 *.node
+/npm
 .idea
 .vscode

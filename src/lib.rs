@@ -2,23 +2,23 @@
 use base64::{engine::general_purpose, Engine as _};
 use clipboard_rs::{
   common::RustImage, Clipboard, ClipboardContext, ClipboardHandler, ClipboardWatcher,
-  ClipboardWatcherContext, ContentFormat, RustImageData,
+  ClipboardWatcherContext, ContentFormat, RustImageData, WatcherShutdown,
 };
-use napi::{
-  bindgen_prelude::*,
-  threadsafe_function::{ErrorStrategy, ThreadsafeFunction, ThreadsafeFunctionCallMode},
-  JsFunction,
-};
-use std::{thread, time::Duration};
-
-#[macro_use]
-extern crate napi_derive;
+use napi::bindgen_prelude::*;
+use napi::threadsafe_function::{ThreadsafeCallContext, ThreadsafeFunctionCallMode};
+use napi_derive::napi;
+use std::sync::{Arc, Mutex};
 
 #[napi]
 pub fn available_formats() -> Vec<String> {
   let ctx = ClipboardContext::new().unwrap();
-  let types = ctx.available_formats().unwrap();
-  types
+  ctx.available_formats().unwrap()
+}
+
+#[napi]
+pub fn has_text() -> bool {
+  let ctx = ClipboardContext::new().unwrap();
+  ctx.has(ContentFormat::Text)
 }
 
 #[napi]
@@ -34,24 +34,58 @@ pub async fn set_text(text: String) {
 }
 
 #[napi]
-pub fn has_text() -> bool {
+pub fn has_html() -> bool {
   let ctx = ClipboardContext::new().unwrap();
-  ctx.has(ContentFormat::Text)
+  ctx.has(ContentFormat::Html)
+}
+
+#[napi]
+pub async fn get_html() -> String {
+  let ctx = ClipboardContext::new().unwrap();
+  ctx.get_html().unwrap()
+}
+
+#[napi]
+pub async fn set_html(html: String) {
+  let ctx = ClipboardContext::new().unwrap();
+  ctx.set_html(html).unwrap()
+}
+
+#[napi]
+pub fn has_rtf() -> bool {
+  let ctx = ClipboardContext::new().unwrap();
+  ctx.has(ContentFormat::Rtf)
+}
+
+#[napi]
+pub async fn get_rtf() -> String {
+  let ctx = ClipboardContext::new().unwrap();
+  ctx.get_rich_text().unwrap()
+}
+
+#[napi]
+pub async fn set_rtf(rtf: String) {
+  let ctx = ClipboardContext::new().unwrap();
+  ctx.set_rich_text(rtf).unwrap()
+}
+
+#[napi]
+pub fn has_image() -> bool {
+  let ctx = ClipboardContext::new().unwrap();
+  ctx.has(ContentFormat::Image)
 }
 
 #[napi]
 pub async fn get_image_binary() -> Vec<u8> {
   let ctx = ClipboardContext::new().unwrap();
   let image = ctx.get_image().unwrap();
-  let image_bytes = image.to_png().unwrap().get_bytes().to_vec();
-  image_bytes
+  image.to_png().unwrap().get_bytes().to_vec()
 }
 
 #[napi]
 pub async fn get_image_base64() -> String {
   let image_bytes = get_image_binary().await;
-  let base64_str = general_purpose::STANDARD_NO_PAD.encode(&image_bytes);
-  base64_str
+  general_purpose::STANDARD_NO_PAD.encode(&image_bytes)
 }
 
 #[napi]
@@ -68,45 +102,33 @@ pub async fn set_image_base64(base64_str: String) {
 }
 
 #[napi]
-pub fn has_image() -> bool {
+pub fn has_files() -> bool {
   let ctx = ClipboardContext::new().unwrap();
-  ctx.has(ContentFormat::Image)
+  ctx.has(ContentFormat::Files)
 }
 
 #[napi]
-pub async fn get_html() -> String {
+pub async fn get_files() -> Vec<String> {
   let ctx = ClipboardContext::new().unwrap();
-  ctx.get_html().unwrap()
+  ctx.get_files().unwrap()
 }
 
 #[napi]
-pub async fn set_html(html: String) {
+pub async fn set_files(files: Vec<String>) {
   let ctx = ClipboardContext::new().unwrap();
-  ctx.set_html(html).unwrap()
+  ctx.set_files(files).unwrap()
 }
 
 #[napi]
-fn has_html() -> bool {
+pub async fn get_buffer(format: String) -> Vec<u8> {
   let ctx = ClipboardContext::new().unwrap();
-  ctx.has(ContentFormat::Html)
+  ctx.get_buffer(&format).unwrap()
 }
 
 #[napi]
-pub async fn get_rtf() -> String {
+pub async fn set_buffer(format: String, buffer: Vec<u8>) {
   let ctx = ClipboardContext::new().unwrap();
-  ctx.get_rich_text().unwrap()
-}
-
-#[napi]
-pub async fn set_rtf(rtf: String) {
-  let ctx = ClipboardContext::new().unwrap();
-  ctx.set_rich_text(rtf).unwrap()
-}
-
-#[napi]
-pub fn has_rtf() -> bool {
-  let ctx = ClipboardContext::new().unwrap();
-  ctx.has(ContentFormat::Rtf)
+  ctx.set_buffer(&format, buffer).unwrap()
 }
 
 #[napi]
@@ -115,77 +137,73 @@ pub async fn clear() {
   ctx.clear().unwrap()
 }
 
-struct Manager {
-  ctx: ClipboardContext,
+// ============================================================================
+// Clipboard Watching
+// ============================================================================
+
+struct CallbackHandler {
+  on_change: Arc<dyn Fn() + Send + Sync>,
 }
 
-impl Manager {
-  pub fn new() -> Self {
-    let ctx = ClipboardContext::new().unwrap();
-    Manager { ctx }
-  }
-}
-
-impl ClipboardHandler for Manager {
+impl ClipboardHandler for CallbackHandler {
   fn on_clipboard_change(&mut self) {
-    println!(
-      "on_clipboard_change, txt = {}",
-      self.ctx.get_text().unwrap()
-    );
+    (self.on_change)();
   }
 }
 
 #[napi]
-pub fn watch() {
-  let manager = Manager::new();
+pub struct ClipboardWatcherJs {
+  shutdown: Arc<Mutex<Option<WatcherShutdown>>>,
+}
 
-  let mut watcher = ClipboardWatcherContext::new().unwrap();
+#[napi]
+impl ClipboardWatcherJs {
+  #[napi]
+  pub fn stop(&self) -> Result<()> {
+    let mut guard = self.shutdown.lock().unwrap();
+    if let Some(shutdown) = guard.take() {
+      shutdown.stop();
+    }
+    Ok(())
+  }
 
-  let watcher_shutdown = watcher.add_handler(manager).get_shutdown_channel();
+  #[napi(getter)]
+  pub fn is_running(&self) -> bool {
+    let guard = self.shutdown.lock().unwrap();
+    guard.is_some()
+  }
+}
 
-  thread::spawn(move || {
-    thread::sleep(Duration::from_secs(5));
-    println!("stop watch!");
-    watcher_shutdown.stop();
+/// Start watching the clipboard for changes.
+/// The callback is invoked whenever the clipboard content changes.
+/// Returns a `ClipboardWatcherJs` handle that can stop the watcher.
+#[napi(ts_return_type = "ClipboardWatcherJs")]
+pub fn start_watch(
+  #[napi(ts_arg_type = "() => void")] callback: Function<(), ()>,
+) -> Result<ClipboardWatcherJs> {
+  let tsfn = callback
+    .build_threadsafe_function()
+    .build_callback(|_ctx: ThreadsafeCallContext<()>| Ok::<Vec<()>, napi::Error>(vec![]))?;
+
+  let on_change: Arc<dyn Fn() + Send + Sync> = Arc::new(move || {
+    let _ = tsfn.call((), ThreadsafeFunctionCallMode::NonBlocking);
   });
 
-  println!("start watch!");
-  watcher.start_watch();
-}
+  let handler = CallbackHandler { on_change };
+  let mut watcher = ClipboardWatcherContext::new().map_err(|e| {
+    Error::new(
+      Status::GenericFailure,
+      format!("Failed to create clipboard watcher: {}", e),
+    )
+  })?;
+  watcher.add_handler(handler);
 
-#[napi]
-pub fn call_threadsafe_function(callback: JsFunction) -> Result<()> {
-  let tsfn: ThreadsafeFunction<u32, ErrorStrategy::CalleeHandled> = callback
-    .create_threadsafe_function(0, |ctx| {
-      ctx.env.create_uint32(ctx.value + 1).map(|v| vec![v])
-    })?;
-  for n in 0..10 {
-    let tsfn = tsfn.clone();
-    thread::spawn(move || {
-      tsfn.call(Ok(n), ThreadsafeFunctionCallMode::Blocking);
-    });
-  }
-  Ok(())
-}
+  let shutdown = watcher.get_shutdown_channel();
+  std::thread::spawn(move || {
+    watcher.start_watch();
+  });
 
-// #[js_function(1)]
-// fn hello(ctx: CallContext) -> Result<JsString, String> {
-//   let argument_one = ctx
-//     .get::<JsString>(0)
-//     .map_err(|err| err.to_string())?
-//     .into_utf8()
-//     .map_err(|err| err.to_string())?;
-//   ctx
-//     .env
-//     .create_string_from_std(format!("{} world!", argument_one.as_str()?))
-// }
-
-#[cfg(test)]
-mod tests {
-  use super::*;
-
-  #[test]
-  fn it_works() {
-    watch();
-  }
+  Ok(ClipboardWatcherJs {
+    shutdown: Arc::new(Mutex::new(Some(shutdown))),
+  })
 }

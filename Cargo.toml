@@ -7,18 +7,15 @@ version = "0.0.0"
 crate-type = ["cdylib"]
 
 [dependencies]
-base64 = "0.22.0"
-clipboard-rs = "0.1.7"
-futures = "0.3.30"
-# Default enable napi4 feature, see https://nodejs.org/api/n-api.html#node-api-version-matrix
-napi = { version = "2.12.2", default-features = false, features = ["napi4", "tokio_rt"] }
-napi-derive = "2.12.2"
-tokio = "1.36.0"
+base64 = "0.22"
+clipboard-rs = "0.3.2"
+napi = { version = "3", features = ["tokio_rt"] }
+napi-derive = "3"
+tokio = "1"
 
 [build-dependencies]
-napi-build = "2.0.1"
+napi-build = "2"
 
 [profile.release]
 lto = true
 strip = "symbols"
-
