@@ -27,7 +27,9 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: Enable corepack
-        run: corepack enable
+        run: |
+          npm uninstall -g yarn pnpm
+          corepack enable
       - name: Setup node
         uses: actions/setup-node@v6
         with:
@@ -65,7 +67,9 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: Enable corepack
-        run: corepack enable
+        run: |
+          npm uninstall -g yarn pnpm
+          corepack enable
       - name: Setup node
         uses: actions/setup-node@v6
         with:
@@ -128,7 +132,9 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: Enable corepack
-        run: corepack enable
+        run: |
+          npm uninstall -g yarn pnpm
+          corepack enable
       - name: Setup node
         uses: actions/setup-node@v6
         with:
@@ -163,7 +169,9 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: Enable corepack
-        run: corepack enable
+        run: |
+          npm uninstall -g yarn pnpm
+          corepack enable
       - name: Setup node
         uses: actions/setup-node@v6
         with:
@@ -202,7 +210,9 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - name: Enable corepack
-        run: corepack enable
+        run: |
+          npm uninstall -g yarn pnpm
+          corepack enable
       - name: Setup node
         uses: actions/setup-node@v6
         with:
