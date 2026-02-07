@@ -26,6 +26,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+      - name: Enable corepack
+        run: corepack enable
       - name: Setup node
         uses: actions/setup-node@v6
         with:
@@ -62,6 +64,8 @@ jobs:
     runs-on: ${{ matrix.settings.host }}
     steps:
       - uses: actions/checkout@v6
+      - name: Enable corepack
+        run: corepack enable
       - name: Setup node
         uses: actions/setup-node@v6
         with:
@@ -123,6 +127,8 @@ jobs:
     runs-on: ${{ matrix.settings.host }}
     steps:
       - uses: actions/checkout@v6
+      - name: Enable corepack
+        run: corepack enable
       - name: Setup node
         uses: actions/setup-node@v6
         with:
@@ -156,6 +162,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+      - name: Enable corepack
+        run: corepack enable
       - name: Setup node
         uses: actions/setup-node@v6
         with:
@@ -193,6 +201,8 @@ jobs:
       - test-linux-binding
     steps:
       - uses: actions/checkout@v6
+      - name: Enable corepack
+        run: corepack enable
       - name: Setup node
         uses: actions/setup-node@v6
         with:

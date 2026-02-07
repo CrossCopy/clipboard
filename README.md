@@ -203,3 +203,8 @@ The watcher runs on a background thread using native clipboard change events —
 Everything is done with GitHub Actions.
 
 Run `npm version patch` to bump the version, then `git push --follow-tags`. GitHub Actions will build and publish automatically.
+
+```bash
+npm version patch
+git push --follow-tags
+```
