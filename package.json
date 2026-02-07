@@ -1,6 +1,6 @@
 {
   "name": "@crosscopy/clipboard",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Cross-platform clipboard operations for Node.js",
   "main": "index.js",
   "types": "index.d.ts",
