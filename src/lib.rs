@@ -9,132 +9,140 @@ use napi::threadsafe_function::{ThreadsafeCallContext, ThreadsafeFunctionCallMod
 use napi_derive::napi;
 use std::sync::{Arc, Mutex};
 
-#[napi]
-pub fn available_formats() -> Vec<String> {
-  let ctx = ClipboardContext::new().unwrap();
-  ctx.available_formats().unwrap()
+/// Helper to convert clipboard_rs errors into napi errors.
+fn cb_err(e: impl std::fmt::Display) -> Error {
+  Error::new(Status::GenericFailure, e.to_string())
 }
 
 #[napi]
-pub fn has_text() -> bool {
-  let ctx = ClipboardContext::new().unwrap();
-  ctx.has(ContentFormat::Text)
+pub fn available_formats() -> Result<Vec<String>> {
+  let ctx = ClipboardContext::new().map_err(cb_err)?;
+  ctx.available_formats().map_err(cb_err)
 }
 
 #[napi]
-pub async fn get_text() -> String {
-  let ctx = ClipboardContext::new().unwrap();
-  ctx.get_text().unwrap()
+pub fn has_text() -> Result<bool> {
+  let ctx = ClipboardContext::new().map_err(cb_err)?;
+  Ok(ctx.has(ContentFormat::Text))
 }
 
 #[napi]
-pub async fn set_text(text: String) {
-  let ctx = ClipboardContext::new().unwrap();
-  ctx.set_text(text).unwrap()
+pub async fn get_text() -> Result<String> {
+  let ctx = ClipboardContext::new().map_err(cb_err)?;
+  ctx.get_text().map_err(cb_err)
 }
 
 #[napi]
-pub fn has_html() -> bool {
-  let ctx = ClipboardContext::new().unwrap();
-  ctx.has(ContentFormat::Html)
+pub async fn set_text(text: String) -> Result<()> {
+  let ctx = ClipboardContext::new().map_err(cb_err)?;
+  ctx.set_text(text).map_err(cb_err)
 }
 
 #[napi]
-pub async fn get_html() -> String {
-  let ctx = ClipboardContext::new().unwrap();
-  ctx.get_html().unwrap()
+pub fn has_html() -> Result<bool> {
+  let ctx = ClipboardContext::new().map_err(cb_err)?;
+  Ok(ctx.has(ContentFormat::Html))
 }
 
 #[napi]
-pub async fn set_html(html: String) {
-  let ctx = ClipboardContext::new().unwrap();
-  ctx.set_html(html).unwrap()
+pub async fn get_html() -> Result<String> {
+  let ctx = ClipboardContext::new().map_err(cb_err)?;
+  ctx.get_html().map_err(cb_err)
 }
 
 #[napi]
-pub fn has_rtf() -> bool {
-  let ctx = ClipboardContext::new().unwrap();
-  ctx.has(ContentFormat::Rtf)
+pub async fn set_html(html: String) -> Result<()> {
+  let ctx = ClipboardContext::new().map_err(cb_err)?;
+  ctx.set_html(html).map_err(cb_err)
 }
 
 #[napi]
-pub async fn get_rtf() -> String {
-  let ctx = ClipboardContext::new().unwrap();
-  ctx.get_rich_text().unwrap()
+pub fn has_rtf() -> Result<bool> {
+  let ctx = ClipboardContext::new().map_err(cb_err)?;
+  Ok(ctx.has(ContentFormat::Rtf))
 }
 
 #[napi]
-pub async fn set_rtf(rtf: String) {
-  let ctx = ClipboardContext::new().unwrap();
-  ctx.set_rich_text(rtf).unwrap()
+pub async fn get_rtf() -> Result<String> {
+  let ctx = ClipboardContext::new().map_err(cb_err)?;
+  ctx.get_rich_text().map_err(cb_err)
 }
 
 #[napi]
-pub fn has_image() -> bool {
-  let ctx = ClipboardContext::new().unwrap();
-  ctx.has(ContentFormat::Image)
+pub async fn set_rtf(rtf: String) -> Result<()> {
+  let ctx = ClipboardContext::new().map_err(cb_err)?;
+  ctx.set_rich_text(rtf).map_err(cb_err)
 }
 
 #[napi]
-pub async fn get_image_binary() -> Vec<u8> {
-  let ctx = ClipboardContext::new().unwrap();
-  let image = ctx.get_image().unwrap();
-  image.to_png().unwrap().get_bytes().to_vec()
+pub fn has_image() -> Result<bool> {
+  let ctx = ClipboardContext::new().map_err(cb_err)?;
+  Ok(ctx.has(ContentFormat::Image))
 }
 
 #[napi]
-pub async fn get_image_base64() -> String {
-  let image_bytes = get_image_binary().await;
-  general_purpose::STANDARD_NO_PAD.encode(&image_bytes)
+pub async fn get_image_binary() -> Result<Vec<u8>> {
+  let ctx = ClipboardContext::new().map_err(cb_err)?;
+  let image = ctx.get_image().map_err(cb_err)?;
+  let png = image.to_png().map_err(cb_err)?;
+  Ok(png.get_bytes().to_vec())
 }
 
 #[napi]
-pub async fn set_image_binary(image_bytes: Vec<u8>) {
-  let ctx = ClipboardContext::new().unwrap();
-  let img = RustImageData::from_bytes(&image_bytes).unwrap();
-  ctx.set_image(img).unwrap()
+pub async fn get_image_base64() -> Result<String> {
+  let image_bytes = get_image_binary().await?;
+  Ok(general_purpose::STANDARD_NO_PAD.encode(&image_bytes))
 }
 
 #[napi]
-pub async fn set_image_base64(base64_str: String) {
-  let decoded: Vec<u8> = general_purpose::STANDARD_NO_PAD.decode(base64_str).unwrap();
-  set_image_binary(decoded).await;
+pub async fn set_image_binary(image_bytes: Vec<u8>) -> Result<()> {
+  let ctx = ClipboardContext::new().map_err(cb_err)?;
+  let img = RustImageData::from_bytes(&image_bytes).map_err(cb_err)?;
+  ctx.set_image(img).map_err(cb_err)
 }
 
 #[napi]
-pub fn has_files() -> bool {
-  let ctx = ClipboardContext::new().unwrap();
-  ctx.has(ContentFormat::Files)
+pub async fn set_image_base64(base64_str: String) -> Result<()> {
+  let decoded: Vec<u8> = general_purpose::STANDARD_NO_PAD
+    .decode(base64_str)
+    .map_err(cb_err)?;
+  set_image_binary(decoded).await
 }
 
 #[napi]
-pub async fn get_files() -> Vec<String> {
-  let ctx = ClipboardContext::new().unwrap();
-  ctx.get_files().unwrap()
+pub fn has_files() -> Result<bool> {
+  let ctx = ClipboardContext::new().map_err(cb_err)?;
+  Ok(ctx.has(ContentFormat::Files))
 }
 
 #[napi]
-pub async fn set_files(files: Vec<String>) {
-  let ctx = ClipboardContext::new().unwrap();
-  ctx.set_files(files).unwrap()
+pub async fn get_files() -> Result<Vec<String>> {
+  let ctx = ClipboardContext::new().map_err(cb_err)?;
+  ctx.get_files().map_err(cb_err)
 }
 
 #[napi]
-pub async fn get_buffer(format: String) -> Vec<u8> {
-  let ctx = ClipboardContext::new().unwrap();
-  ctx.get_buffer(&format).unwrap()
+pub async fn set_files(files: Vec<String>) -> Result<()> {
+  let ctx = ClipboardContext::new().map_err(cb_err)?;
+  ctx.set_files(files).map_err(cb_err)
 }
 
 #[napi]
-pub async fn set_buffer(format: String, buffer: Vec<u8>) {
-  let ctx = ClipboardContext::new().unwrap();
-  ctx.set_buffer(&format, buffer).unwrap()
+pub async fn get_buffer(format: String) -> Result<Vec<u8>> {
+  let ctx = ClipboardContext::new().map_err(cb_err)?;
+  ctx.get_buffer(&format).map_err(cb_err)
 }
 
 #[napi]
-pub async fn clear() {
-  let ctx = ClipboardContext::new().unwrap();
-  ctx.clear().unwrap()
+pub async fn set_buffer(format: String, buffer: Vec<u8>) -> Result<()> {
+  let ctx = ClipboardContext::new().map_err(cb_err)?;
+  ctx.set_buffer(&format, buffer).map_err(cb_err)
+}
+
+#[napi]
+pub async fn clear() -> Result<()> {
+  let ctx = ClipboardContext::new().map_err(cb_err)?;
+  ctx.clear().map_err(cb_err)
 }
 
 // ============================================================================
@@ -160,7 +168,10 @@ pub struct ClipboardWatcherJs {
 impl ClipboardWatcherJs {
   #[napi]
   pub fn stop(&self) -> Result<()> {
-    let mut guard = self.shutdown.lock().unwrap();
+    let mut guard = self
+      .shutdown
+      .lock()
+      .map_err(|e| Error::new(Status::GenericFailure, e.to_string()))?;
     if let Some(shutdown) = guard.take() {
       shutdown.stop();
     }
@@ -169,8 +180,11 @@ impl ClipboardWatcherJs {
 
   #[napi(getter)]
   pub fn is_running(&self) -> bool {
-    let guard = self.shutdown.lock().unwrap();
-    guard.is_some()
+    let guard = self.shutdown.lock();
+    match guard {
+      Ok(g) => g.is_some(),
+      Err(_) => false,
+    }
   }
 }
 
