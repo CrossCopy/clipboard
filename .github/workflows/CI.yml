@@ -179,8 +179,8 @@ jobs:
           cache: pnpm
       - name: Install dependencies
         run: |
-          pnpm config set --json supportedArchitectures.cpu '["current", "x64"]'
-          pnpm config set --json supportedArchitectures.libc '["current", "glibc"]'
+          pnpm config set supportedArchitectures.cpu '["current", "x64"]'
+          pnpm config set supportedArchitectures.libc '["current", "glibc"]'
           pnpm install
       - name: Download artifacts
         uses: actions/download-artifact@v7
