@@ -23,7 +23,7 @@
 ```bash
 npm install @crosscopy/clipboard
 # 或
-yarn add @crosscopy/clipboard
+pnpm add @crosscopy/clipboard
 ```
 
 ## 快速开始

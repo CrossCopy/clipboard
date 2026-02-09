@@ -2,3 +2,4 @@ target
 .yarn
 index.js
 .yarnrc.yml
+.pnpm-store

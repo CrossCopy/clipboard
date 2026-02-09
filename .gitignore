@@ -194,6 +194,10 @@ Cargo.lock
 !.yarn/sdks
 !.yarn/versions
 
+# pnpm
+.pnpm-store/
+.pnpm-debug.log
+
 *.node
 /npm
 .idea

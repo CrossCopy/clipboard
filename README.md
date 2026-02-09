@@ -23,7 +23,7 @@ Cross-platform native clipboard for Node.js. Read, write, and watch the system c
 ```bash
 npm install @crosscopy/clipboard
 # or
-yarn add @crosscopy/clipboard
+pnpm add @crosscopy/clipboard
 ```
 
 ## Quick Start
