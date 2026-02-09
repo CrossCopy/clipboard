@@ -11,8 +11,7 @@
   "license": "MIT",
   "files": [
     "index.d.ts",
-    "index.js",
-    "*.node"
+    "index.js"
   ],
   "napi": {
     "binaryName": "clipboard",
